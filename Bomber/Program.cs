@@ -12,7 +12,7 @@ namespace Bomber
     {
         static void Main(string[] args)
         {
-            
+            Srch();
             Console.Read();
         }
 

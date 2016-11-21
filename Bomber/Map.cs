@@ -28,9 +28,9 @@ namespace Bomber
 
         public void UpdateLine(string line, int y)
         {
-            string[] pnts = line.Split(' ');
+            char[] pnts = line.ToCharArray();
             for (int x = 0; x < pnts.Length; x++)
-                this._points[x, y].BoxPlace = pnts[x] == "0";
+                this._points[x, y].BoxPlace = pnts[x] == '0';
         }
 
         public void KoefRecalc(int radius)
@@ -106,7 +106,8 @@ namespace Bomber
             double Xb = (double)B.X;
             double Yb = (double)B.Y;
 
-            return Math.Sqrt(Math.Pow(Math.Abs(Xb - Xa), 2D) + Math.Pow(Math.Abs(Yb - Ya), 2D));
+            //return Math.Sqrt(Math.Pow(Math.Abs(Xb - Xa), 2D) + Math.Pow(Math.Abs(Yb - Ya), 2D));
+            return Math.Abs(Xb - Xa) + Math.Abs(Yb - Ya);
         }
 
         private Point _getNearMaxPoint(Point p, int v, Point[] wp)
