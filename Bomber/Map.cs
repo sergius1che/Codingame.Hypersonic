@@ -30,7 +30,7 @@ namespace Bomber
         {
             char[] pnts = line.ToCharArray();
             for (int x = 0; x < pnts.Length; x++)
-                this._points[x, y].BoxPlace = pnts[x] == '0';
+                this._points[x, y].SetType(pnts[x]);
         }
 
         public void KoefRecalc(int radius)
@@ -59,28 +59,33 @@ namespace Bomber
 
         public Point[] GetBoxes(Point point, int radius)
         {
+            return GetPoints(point, radius, PointType.EmptyBox, PointType.BoxWithAddBomb, PointType.BoxWithAddRadius)
+        }
+
+        public Point[] GetPoints(Point point, int radius, params PointType[] type)
+        {
             int x = point.X;
             int y = point.Y;
             bool u = true, r = true, d = true, l = true;
             List<Point> boxes = new List<Point>();
-            for(int i = 1; i < radius; i++)
+            for (int i = 1; i < radius; i++)
             {
-                if (u && y - i >= 0 && this._points[x, y - i].BoxPlace)
+                if (u && y - i >= 0 && type.Contains(this._points[x, y - i].PointType))
                 {
                     boxes.Add(this._points[x, y - i]);
                     u = false;
                 }
-                if (r && x + i < this._width && this._points[x + i, y].BoxPlace)
+                if (r && x + i < this._width && type.Contains(this._points[x + i, y].PointType))
                 {
                     boxes.Add(this._points[x + i, y]);
                     r = false;
                 }
-                if (d && y + i < this._height && this._points[x, y + i].BoxPlace)
+                if (d && y + i < this._height && type.Contains(this._points[x, y + i].PointType))
                 {
                     boxes.Add(this._points[x, y + i]);
                     d = false;
                 }
-                if (l && x - i >= 0 && this._points[x - i, y].BoxPlace)
+                if (l && x - i >= 0 && type.Contains(this._points[x - i, y].PointType))
                 {
                     boxes.Add(this._points[x - i, y]);
                     l = false;
@@ -142,6 +147,7 @@ namespace Bomber
         private int _y;
         private int _boxCount;
         private bool _boxPlace;
+        private PointType _pointType;
 
         public int X { get { return _x; } }
         public int Y { get { return _y; } }
@@ -174,6 +180,7 @@ namespace Bomber
                     _boxCount = 0;
             }
         }
+        public PointType PointType { get { return _pointType; } }
 
         public Point(int x, int y)
         {
@@ -181,6 +188,28 @@ namespace Bomber
             this._y = y;
             this._boxCount = 0;
             this._boxPlace = false;
+            this._pointType = PointType.Clear;
+        }
+
+        public Point(int x, int y, char type) : this(x, y)
+        {
+            SetType(type);
+        }
+
+        public void SetType(char type)
+        {
+            if (type == '.')
+                this._pointType = PointType.Clear;
+            if (type == '0')
+                this._pointType = PointType.Clear;
+            if (type == '1')
+                this._pointType = PointType.BoxWithAddBomb;
+            if (type == '2')
+                this._pointType = PointType.BoxWithAddRadius;
+            if (type == 'X')
+                this._pointType = PointType.Wall;
+
+            this.BoxPlace = type != '.' && type != 'X';
         }
 
         public int CompareTo(object obj)
@@ -208,5 +237,14 @@ namespace Bomber
         {
             return $"{_x} {_y}";
         }
+    }
+
+    public enum PointType
+    {
+        Clear = -1,
+        EmptyBox = 0,
+        BoxWithAddBomb = 1,
+        BoxWithAddRadius = 2,
+        Wall = 9
     }
 }

@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="BaseEntity.cs" />
     <Compile Include="Bomb.cs" />
+    <Compile Include="Bonus.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="InitComponents.cs" />
     <Compile Include="Map.cs" />

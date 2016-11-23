@@ -10,13 +10,15 @@ namespace Bomber
     {
         private List<Player> _players;
         private List<Bomb> _bombs;
+        private List<Bonus> _bonus;
         private Player _iam;
 
         public Map Map { get; set; }
         public int MyId { get; set; }
         public List<Player> Players { get { return _players; } }
         public List<Bomb> Bombs { get { return _bombs; } }
-        
+        public List<Bonus> Bonus { get { return _bonus; } }
+
         public GameManager(int myId)
         {
             this._players = new List<Player>();
@@ -51,6 +53,11 @@ namespace Bomber
         public void SetBomb(string entityData)
         {
             this._bombs.Add(new Bomb(entityData));
+        }
+
+        public void SetBonus(string entityData)
+        {
+            this._bonus.Add(new Bonus(entityData));
         }
 
         public void Turn()
